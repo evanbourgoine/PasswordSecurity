@@ -32,24 +32,31 @@ def check_validity(password, dictionary):
 
 #parameter password is the password given in hashed form
 #dictionary parameter is the dictionary of possible passwords
-def dict_attack256(password, combo_dict):
+def dict_attack256(hash_password, combo_dict):
     count = 1
     for word in combo_dict:
         hashed_word = hash256(word)
-        if hashed_word == password:
+        if hashed_word == hash_password:
             break
         else:
             count = count + 1
 
-def dict_attack512(password, combo_dict):
+def dict_attack512(hash_password, combo_dict):
     count = 1
     for word in combo_dict:
         hashed_word = hash512(word)
-        if hashed_word == password:
+        if hashed_word == hash_password:
             break
         else:
             count = count + 1
 
+def eliminate_words(password, dictionary):
+    updated_dictionary = []
+    for word in dictionary:
+        if len(word) == len(password):
+            updated_dictionary.append(word)
+    return updated_dictionary
+    
     
 def generate_combinations(dictionary):
     combos = []
@@ -98,12 +105,14 @@ def main():
             print("SHA512: ", hashed_password512, "\n")
             combo_dict = generate_combinations(dict_array)
 
+            updated_dict = eliminate_words(password, combo_dict)
+
             start256 = time.time()
-            dict_attack256(hashed_password256, combo_dict)
+            dict_attack256(hashed_password256, updated_dict)
             end256 = time.time()
 
             start512 = time.time()
-            dict_attack512(hashed_password512, combo_dict)
+            dict_attack512(hashed_password512, updated_dict)
             end512 = time.time()
 
             print("Time to crack SHA256: ", end256 - start256)
