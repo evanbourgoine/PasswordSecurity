@@ -1,5 +1,6 @@
 #Evan Bourgoine
 import hashlib, binascii
+import matplotlib.pyplot as plt
 import time
 from itertools import combinations, permutations
 
@@ -81,6 +82,22 @@ def generate_combinations(dictionary):
             for perm in permutations(combo):
                 combos.append(''.join(perm))
     return combos
+
+def create_graph(passwords, times, hash_form):
+
+    plt.figure(figsize=(8, 6))
+    plt.scatter(passwords, times, color='blue', marker='o')
+
+    plt.xlabel('Password')
+    plt.ylabel('Time to Crack (seconds)')
+    plt.title('Password vs. Time to Crack (' + hash_form + ')')
+
+    plt.xticks(rotation=45)
+    plt.grid(True)
+    plt.tight_layout()
+
+    plt.show()
+
     
 def main():
 
@@ -95,6 +112,12 @@ def main():
     #Prompts user for password
     password = input("Enter password: \t")
 
+    #Create one set to store the password, if valid, and associated time to crack.
+    #two sets of data will be stored for both times of SHA256 and SHA512.
+    passwords = []
+    times256 = []
+    times512 = []
+
     #Create boolean value to store validity of password for searching
     is_valid = False
     while password != "q": #Check if user is done checking passwords
@@ -107,6 +130,8 @@ def main():
 
         #If password given is valid, perform dict. attack to find password in dictionary
         if is_valid: 
+            passwords.append(password)
+
             #hash user password to SHA256
             hashed_password256 = hash256(password)
             print("\nSHA256: ", hashed_password256)
@@ -131,10 +156,17 @@ def main():
             end512 = time.time()
 
             #print time it takes to crack both attacks
-            print("Time to crack SHA256: ", end256 - start256)
-            print("Time to crack SHA512: ", end512 - start512)
+            total_time256 = end256 - start256
+            total_time512 = end512 - start512
+            print("Time to crack SHA256: ", total_time256)
+            print("Time to crack SHA512: ", total_time512)
+            times256.append(total_time256)
+            times512.append(total_time512)
+
     
         password = input("Enter password: \t") #prompt for anothr password, or 'q'
+    create_graph(passwords, times256, 'SHA256')
+    create_graph(passwords, times512, 'SHA512')
     
         
 
