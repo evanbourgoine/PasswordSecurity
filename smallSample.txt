@@ -1,8 +1,0 @@
-hello
-world
-test
-sample
-orange
-apple
-banana
-fruit

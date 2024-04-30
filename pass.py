@@ -66,22 +66,21 @@ def dict_attack512(hash_password, combo_dict):
         else:
             count = count + 1
 
-#will eliminate words in the dictionary if they are not the correct length 
-def eliminate_words(password, dictionary):
-    updated_dictionary = []
-    for word in dictionary:
-        if len(word) == len(password):
-            updated_dictionary.append(word)
-    return updated_dictionary
     
 #will generate all possible combinations of up to 3 words in the dictionary
-def generate_combinations(dictionary):
+#eliminate words that are not the appropriate length
+def generate_combinations(password, dictionary):
     combos = []
     for i in range(1, 4):
         for combo in combinations(dictionary, i):
             for perm in permutations(combo):
                 combos.append(''.join(perm))
-    return combos
+    updated_dictionary = []
+    for word in combos:
+        if len(word) == len(password):
+            updated_dictionary.append(word)
+    return updated_dictionary
+    
 
 def create_graph(passwords, times, hash_form, dict_size):
 
@@ -103,7 +102,7 @@ def main():
 
     #Creates dictionary of words from text file given
     dict_array = []
-    dict_file = open("smallSample.txt", "r")
+    dict_file = open("testDict.txt", "r")
 
         #add each word in file to the dictionary
     for line in dict_file:
@@ -143,18 +142,16 @@ def main():
             print("SHA512: ", hashed_password512, "\n")
 
             #generate all possible combinations of dictionary words that the password could be
-            combo_dict = generate_combinations(dict_array)
-            #elimate passwords that are not the correct length
-            updated_dict = eliminate_words(password, combo_dict)
+            combo_dict = generate_combinations(password, dict_array)
 
             #begin SHA256 attack, track time
             start256 = time.time()
-            dict_attack256(hashed_password256, updated_dict)
+            dict_attack256(hashed_password256, combo_dict)
             end256 = time.time()
 
             #begin SHA512 attack, track time
             start512 = time.time()
-            dict_attack512(hashed_password512, updated_dict)
+            dict_attack512(hashed_password512, combo_dict)
             end512 = time.time()
 
             #print time it takes to crack both attacks
