@@ -83,14 +83,14 @@ def generate_combinations(dictionary):
                 combos.append(''.join(perm))
     return combos
 
-def create_graph(passwords, times, hash_form):
+def create_graph(passwords, times, hash_form, dict_size):
 
     plt.figure(figsize=(8, 6))
     plt.scatter(passwords, times, color='blue', marker='o')
 
     plt.xlabel('Password')
     plt.ylabel('Time to Crack (seconds)')
-    plt.title('Password vs. Time to Crack (' + hash_form + ')')
+    plt.title('Password vs. Time to Crack (' + hash_form + ')\n Dictionary Size: ' + str(dict_size))
 
     plt.xticks(rotation=45)
     plt.grid(True)
@@ -109,6 +109,8 @@ def main():
     for line in dict_file:
         dict_array.append(line.rstrip('\n'))
 
+    #store the size of the dictionary
+    dict_size = len(dict_array)
     #Prompts user for password
     password = input("Enter password: \t")
 
@@ -165,8 +167,8 @@ def main():
 
     
         password = input("Enter password: \t") #prompt for anothr password, or 'q'
-    create_graph(passwords, times256, 'SHA256')
-    create_graph(passwords, times512, 'SHA512')
+    create_graph(passwords, times256, 'SHA256', dict_size)
+    create_graph(passwords, times512, 'SHA512', dict_size)
     
         
 
