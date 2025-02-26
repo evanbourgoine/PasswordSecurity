@@ -5,8 +5,7 @@ import time
 from itertools import combinations, permutations
 
 #Evan Bourgoine (ebourgoine25)
-#2104 Class Project
-#Option B: Dictionary Attack using different hash algorithms
+#Dictionary Attack using different hash algorithms
 
 #Step 1: Read Dictionary
 #Step 2: User inputs
